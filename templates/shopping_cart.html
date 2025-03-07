@@ -1,0 +1,86 @@
+{% extends "index.html" %}
+
+{% load static %}
+
+{% block content %}
+
+  <main id="main">
+
+     <!-- Shopping Cart Section Begin -->
+     <div class="container" data-aos="fade-up"><br>
+        <div class="section-title"><br><br>
+          <br><br><h2>shopping cart</h2>
+            <p>Your cart details</p>
+        </div>
+      </div>
+
+      <div class="container-fluid" data-aos="fade-up" data-aos-delay="100">
+
+    <section class="shopping-cart spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="shopping__cart__table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Name </th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th>Remove</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in cid %}
+                                <tr>
+                                    <td class="product__cart__item">
+                                        <div class="product__cart__item__pic">
+                                            <img src="{{i.pic.url}}" style="height:150px; width:200px;" alt="" />
+                                        </div>
+                                        <td class="product__cart__item__text">
+                                            <p>{{i.name}}</p>
+                                        </td>
+                                    </td>
+                                    <td class="cart__price">
+                                        <p>Rs.{{i.price}}</p>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'minus' i.id %}" class="btn btn-primary"> - </a>
+                                        {{i.qty}}
+                                        <a href="{% url 'plus' i.id %}" class="btn btn-primary"> + </a> 
+                                    </td>
+                                    <td class="cart__price">
+                                        <p>Rs.{{i.total_price}}</p>
+                                    </td>
+                                    <td class="remove-pr">
+                                        <a href="{% url 'remove' i.id %}"><b> X </b>
+									    <i class="fas fa-times"></i>
+										</a>
+                                    </td>
+                                    {% comment %} <td class="cart__close">
+                                        <span class="icon_close">
+                                        <button type="button" class="btn-close" aria-label="close"></button>
+                                        <a href="{% url 'remove' i.id %}">
+                                        </span>
+                                    </td> {% endcomment %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                    <div class="cart__total">
+                        <center>
+                            <a href="{% url 'billing_address' %}" class="primary-btn"><b>Place Order</b></a>
+                        </center>
+                    </div>
+            </div>
+        </div>
+        </div>
+    </section>
+    <!-- Shopping Cart Section End -->
+</main>
+
+{% endblock %}

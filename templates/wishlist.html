@@ -1,0 +1,68 @@
+{% extends "index.html" %}
+
+{% load static %}
+
+{% block content %}
+
+
+    <main id="main">
+
+        <div class="container" data-aos="fade-up"><br>
+           <div class="section-title"><br><br>
+             <br><br><h2>Wishlist</h2>
+               <p>Your Wishlist..!</p>
+           </div>
+         </div>
+
+    <div class="container-fluid" data-aos="fade-up" data-aos-delay="100">
+
+    <!-- Start Wishlist  -->
+    <div class="wishlist-box-main">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="table-main table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Images</th>
+                                    <th>Product Name</th>
+                                    <th>Price</th>
+                                    <th>Add Item</th>
+                                    <th>Remove</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in wid %}
+                                <tr>
+                                    <td class="thumbnail-img">
+                                        <a href="#">
+									<img class="img-fluid" src="{{i.pic.url}}" style="height:150px; width:200px;" alt="" />
+								</a>
+                                    </td>
+                                    <td class="name-pr">
+                                        <a href="#">{{i.name}}</a>
+                                    </td>
+                                    <td class="price-pr">
+                                        <p>$ {{i.price}}</p>
+                                    </td>
+                                    <td class="add-pr">
+                                        <a class="cart" href="{% url 'add_to_cart' i.product_id.id %}">Add to Cart</a>
+                                    </td>
+                                    <td class="remove-pr">
+                                        <a href="{% url 'wishlist_remove' i.id %}" ><b>X</b></a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- End Wishlist -->
+</main>
+
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends "index.html" %}
+
+{% load static %}
+
+{% block content %}
+
+    <!-- Start Cart  -->
+    <div class="cart-box-main">
+        <div class="container">
+            <div class="row new-account-login">
+                        <form action="{% url 'payload' %}">
+                            <!--================Checkout Area =================-->
+                            <section class="checkout_area section_gap">
+                              <center>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="table-responsive"><br><br><br>
+                                                <h3 class="dart-pb-20">Your Order</h3>
+                                                <table class="table cart checkout" border="1">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="cart-product-thumbnail">Product</th>
+                                                            <th class="cart-product-name">Name</th>
+                                                            <th class="cart-product-quantity">Quantity</th>
+                                                            <th class="cart-product-subtotal">Total</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for x in prod %}
+                                                        <tr class="cart_item">
+                        
+                                                            <td class="cart-product-thumbnail">
+                                                                <a href="#"><img width="100" height="84" src="{{x.pic.url}}"
+                                                                        alt="Pink Printed Dress"></a>
+                                                            </td>
+                        
+                                                            <td class="cart-product-name">
+                                                                <a href="#">{{x.name}}</a>
+                                                            </td>
+                        
+                                                            <td class="quantity">
+                                                                <span>{{x.qty}}</span>
+                                                            </td>
+                        
+                                                            <td class="cart-product-subtotal">
+                                                                <span class="amount">{{x.total_price}}</span>
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div> 
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <div class="table-responsive totle-cart">
+                                                <h3>Cart Total</h3>
+                                                <table class="table cart" border="1"> 
+                                                
+                                                    <tbody>
+                                                        <tr class="cart_item cart_totle">
+                                                            <td class="cart-product-name">
+                                                                <strong>Cart Subtotal</strong>
+                                                            </td>
+                        
+                                                            <td class="cart-product-name">
+                                                                <span class="amount">Rs.{{sub_total}}</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="cart_item cart_totle">
+                                                            <td class="cart-product-name">
+                                                                <strong>Shipping</strong>
+                                                            </td>
+                                                            <td class="cart-product-name">
+                                                                <span class="amount"> Rs.50</span>
+                                                            </td> 
+                                                        </tr>
+                                                        <tr class="cart_item cart_totle">
+                                                            <td class="cart-product-name">
+                                                                <strong>Total</strong>
+                                                            </td>
+                                                            <td class="cart-product-name">
+                                                                <span class="blue"><strong>Rs.{{total}}</strong></span>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>    
+                                        </div>
+                                        
+                                        <div class="payments-options">
+                                            <ul class="list-unstyled">
+                                                <li>
+                                                    <label for="payment_method_paypal" id="paypal-transfer">
+                                                        <input required type="radio" data-order_button_text="Proceed to PayPal" value="bacs"
+                                                            name="payment_method" class="input-radio" id="payment_method_paypal">
+                                                        Paypal payment <img src="" alt="">
+                                                    </label>
+                                                    <div class="paypal-transfer-msg">
+                                                        <p>Pay via PayPal, you can pay with your credit card if you don't have a PayPal
+                                                            account.</p>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        
+                                        
+                                        <div class="col-md-12">
+                                          <button type="submit" class="btn btn-primary">Place Order</button>
+                                      </div>
+                                         
+                                      </div><base href="">
+                                      <a href="{% url 'change_address' %}" style="margin-left:800px;" class="btn btn-primary">Change Address</a>
+                                  </div>
+                              </center>
+                              </section>
+                              <script src="https://checkout.razorpay.com/v1/checkout.js" data-key="rzp_test_bilBagOBVTi4lE"
+                                  data-amount={{response.amount}} data-currency={{response.currency}} 
+                                  data-buttontext="Pay with Razorpay" data-name="{{request.user}}" data-theme.color="#F37254" data-description=""
+                                  data-image="" data-prefill.name={{request.user.username}} data-prefill.email={{request.user.email}}>
+                             </script>
+                              <input type="hidden" custom="Hidden Element" name="hidden">
+                          
+                           </script>
+                        </form>
+                </div>
+                
+            </div>
+
+        </div>
+    </div>
+    <!-- End Cart -->
+
+{% endblock %}
