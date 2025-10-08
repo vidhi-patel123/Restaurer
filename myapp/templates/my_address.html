@@ -1,0 +1,42 @@
+{% extends "index.html"%}
+
+{% load static%}
+
+{% block content %}
+<body>    
+   
+</div>
+
+  <div class="container mt-5"><br><br><br>
+    <h1 class="text-center mb-4">Address</h1>
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Address</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Example rows (replace with your data) -->
+
+         {% for i in aid %}
+          <tr>
+              <td>{{i.fname}} {{i.lname}} <br> {{i.user_id}} </td>
+              <td>{{i.address}} <br> {{i.city}} <br>{{i.state}},{{i.country}},{{i.pincode}}</td> 
+              
+          </tr>
+          {% endfor %}
+        
+          
+          <!-- Add more rows as needed -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+</body>
+</html>
+
+{% endblock%}

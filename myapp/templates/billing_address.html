@@ -1,0 +1,118 @@
+{% extends "index.html" %}
+
+{% load static %}
+    
+{% block content %}
+
+  <main id="main">
+
+     <!-- ======= Book A Table Section ======= -->
+     <section id="billing" class="billing">
+        <div class="container" data-aos="fade-up">
+
+          <!-- Breadcrumb Begin -->
+        <div class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="breadcrumb__text"><br><br><br>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+            <div class="checkout__form">
+                <form action="{% url 'billing_address' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-lg-11 col-md-4">
+                            <h4 class="checkout__title">Billing Details</h4><br>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="checkout__input">
+                                        <p>First Name<span>*</span></p>
+                                        <input type="text" id="fname" name="fname">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="checkout__input">
+                                        <p>Last Name<span>*</span></p>
+                                        <input type="text" id="lname" name="lname">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="checkout__input">
+                                <p>Address<span>*</span></p>
+                                <input type="text" id="address" name="address" class="checkout__input__add">
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="checkout__input">
+                                        <p>Town/City<span>*</span></p>
+                                        <input type="text" id="city" name="city">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="checkout__input">
+                                        <p>State<span>*</span></p>
+                                        <input type="text" id="state" name="state">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="checkout__input">
+                                <p>Pincode / ZIP<span>*</span></p>
+                                <input type="text" id="pincode" name="pincode">
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="checkout__input">
+                                        <p>Phone<span>*</span></p>
+                                        <input type="text" id="phone" name="phone">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="checkout__input">
+                                        <p>Email<span>*</span></p>
+                                        <input type="email" id="email" name="email">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="checkout__input">
+                                <p>Order notes</p>
+                                <input type="text" id="note" name="note"
+                                placeholder="Notes about your order.">
+                            </div>
+                        </div>
+                        
+                                <center>
+                                    <button type="submit" class="site-btn"><b>PLACE ORDER</b></button>
+                                    {% comment %} <a href="{% url 'aboutUs' %}" button type="submit" class="site-btn"><b>PLACE ORDER</b> </a> {% endcomment %}
+                                </center>
+                    </div>
+                </form>
+            </div>
+    </section>
+    <!-- Checkout Section End -->
+  
+  </main><!-- End #main -->
+  {% endblock %}
+
+{% comment %} 
+ <!-- Vendor JS Files -->
+ <script src="static/vendor/aos/aos.js"></script>
+ <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+ <script src="static/vendor/glightbox/js/glightbox.min.js"></script>
+ <script src="static/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+ <script src="static/vendor/php-email-form/validate.js"></script>
+ <script src="static/vendor/swiper/swiper-bundle.min.js"></script>
+
+ <!-- Template Main JS File -->
+ <script src="static/js/main.js"></script>
+
+</body>
+
+</html> {% endcomment %}
+
+ 
