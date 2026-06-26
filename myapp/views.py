@@ -9,15 +9,18 @@ import razorpay
 
 # Create your views here.
 def index(request):
-    if 'email' in request.session:
-        uid = User.objects.get(email=request.session['email'])
+    con = {}
 
-        con = {
-            'uid' : uid
-        }
-        return render(request,'index.html',con)
-    else:
-        return render(request,'login.html')
+    if 'email' in request.session:
+        try:
+            uid = Register.objects.get(
+                email=request.session['email']
+            )
+            con['uid'] = uid
+        except:
+            pass
+
+    return render(request,'index.html',con)
 
 def aboutUs(request):
     return render(request,'aboutUs.html')
@@ -73,35 +76,33 @@ def reservation(request):
         return render(request,"reservation.html")
 
 def login(request):
-    if 'email' in request.session:
-        uid = User.objects.get(email=request.session['email'])
-        con = {
-                'uid' : uid 
-        }
-        return render(request,"index.html",con)
-    else:
+
+    if request.method == "POST":
+
+        email = request.POST['email']
+        password = request.POST['password']
+
         try:
-            if request.POST:
-                email = request.POST['email']
-                password = request.POST['password']
-                uid = Register.objects.get(email=email,)
+            user = Register.objects.get(email=email)
 
-                if uid.password == password:
-                    request.session['email'] = uid.email
+            if user.password == password:
+                request.session['email'] = email
+                return redirect('index')
 
-                    return render(request,"index.html")
-                else:
-                    con={
-                        'eid' : "Invalid Password..!"
-                    }
-                return render(request,"login.html",con)
-            else:
-                return render(request,'login.html')
-        except:
-            con={
-                'eid' : "Invalid Email.."
-            }
-            return render(request,"login.html",con)
+            return render(
+                request,
+                'login.html',
+                {'eid':'Invalid Password'}
+            )
+
+        except Register.DoesNotExist:
+            return render(
+                request,
+                'login.html',
+                {'eid':'Invalid Email'}
+            )
+
+    return render(request,'login.html')
 
 def logout(request):
     if 'email' in request.session:
@@ -205,33 +206,37 @@ def category(request,id):
     return render(request,"order.html",con)
 
 def add_to_cart(request,id):
-    if 'email' in request.session:
-        uid = User.objects.get(email=request.session['email'])
-        pid = Add_product.objects.get(id=id)
-        pcid = Add_to_cart.objects.filter(user_id=uid,product_id=pid).exists()
-        
-        if pcid:
-            pcid = Add_to_cart.objects.get(product_id=id)
-            pcid.qty = pcid.qty + 1
-            pcid.total_price = pcid.qty * pcid.price
-            pcid.save()
 
-            return redirect('shopping_cart')
-        else:
+    if 'email' not in request.session:
+        return redirect('login')
 
-            pid = Add_product.objects.get(id=id)
+    uid = Register.objects.get(
+        email=request.session['email']
+    )
 
-            acid = Add_to_cart.objects.create(user_id = uid,
-                                            product_id= pid,
-                                            name = pid.name,
-                                            pic = pid.pic,
-                                            price = pid.price,
-                                            qty = pid.qty,
-                                            total_price = pid.qty * pid.price
-                                            )
-            return redirect('shopping_cart')
+    pid = Add_product.objects.get(id=id)
+
+    cart = Add_to_cart.objects.filter(
+        user_id=uid,
+        product_id=pid
+    ).first()
+
+    if cart:
+        cart.qty += 1
+        cart.total_price = cart.qty * cart.price
+        cart.save()
     else:
-        return render(request,"order.html")
+        Add_to_cart.objects.create(
+            user_id=uid,
+            product_id=pid,
+            name=pid.name,
+            pic=pid.pic,
+            price=pid.price,
+            qty=1,
+            total_price=pid.price
+        )
+
+    return redirect('shopping_cart')
 
 def shop_detail(request,id):
     vid = Add_product.objects.get(id=id)
@@ -242,7 +247,7 @@ def shop_detail(request,id):
     return render(request,"shop_detail.html",con)
 
 def shopping_cart(request):
-    uid = User.objects.get(email=request.session['email'])
+    uid = Register.objects.get(email=request.session['email'])
     cid = Add_to_cart.objects.filter(user_id=uid)
     con = {
         'cid' : cid,
@@ -282,7 +287,7 @@ def remove(request,id):
 
 def billing_address(request):
     try:
-        uid = User.objects.get(email=request.session['email'])
+        uid = Register.objects.get(email=request.session['email'])
         aid = Billing_Address.objects.filter(user_id=uid).exists
         cid = Billing_Address.objects.get(user_id=uid)
 
@@ -329,7 +334,7 @@ def billing_address(request):
             return render(request,"billing_address.html")
     
 def checkout(request):
-    uid = User.objects.get(email=request.session['email'])
+    uid = Register.objects.get(email=request.session['email'])
     lid = Add_to_cart.objects.filter(user_id=uid).count
     ctid = Add_to_cart.objects.all()
     prod = Add_to_cart.objects.filter(user_id=uid)
@@ -376,7 +381,7 @@ def checkout(request):
 
 
 def wishlist(request):
-    uid = User.objects.get(email=request.session['email'])
+    uid = Register.objects.get(email=request.session['email'])
     lid = Add_to_cart.objects.filter(user_id=uid).count()
     cart_id = Add_to_cart.objects.filter(user_id=uid)
     wid = Add_to_wishlist.objects.filter(user_id=uid)
@@ -390,7 +395,7 @@ def wishlist(request):
 
 
 def add_to_wishlist(request,id):
-    uid = User.objects.get(email=request.session['email'])
+    uid = Register.objects.get(email=request.session['email'])
     pid = Add_product.objects.get(id=id)
 
     wid = Add_to_wishlist.objects.create(user_id=uid,
@@ -406,13 +411,13 @@ def wishlist_remove(request,id):
     return redirect('wishlist')
 
 def change_address(request):
-    uid = User.objects.get(email=request.session['email'])
+    uid = Register.objects.get(email=request.session['email'])
     did = Billing_Address.objects.get(user_id=uid).delete()
 
     return redirect('billing_address')
 
 def payload(request):
-    uid = User.objects.get(email=request.session['email'])
+    uid = Register.objects.get(email=request.session['email'])
     did=Add_to_cart.objects.all().delete()
     oid=Payload.objects.filter(user_id=uid)
     aid = Billing_Address.objects.filter(user_id=uid)
@@ -426,7 +431,7 @@ def error(request):
     return render(request,'error.html')
 
 def my_address(request):
-    uid = User.objects.get(email=request.session['email'])
+    uid = Register.objects.get(email=request.session['email'])
     aid = Billing_Address.objects.filter(user_id=uid)
     con={
         'aid':aid
