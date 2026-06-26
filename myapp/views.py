@@ -84,7 +84,7 @@ def login(request):
             if request.POST:
                 email = request.POST['email']
                 password = request.POST['password']
-                uid = User.objects.get(email=email,)
+                uid = Register.objects.get(email=email,)
 
                 if uid.password == password:
                     request.session['email'] = uid.email
@@ -117,7 +117,7 @@ def forget_password(request):
         otp = random.randint(1111,9999)
 
         try:
-            uid = User.objects.get(email=email)
+            uid = Register.objects.get(email=email)
             uid.otp=otp
             uid.save()
 
@@ -135,42 +135,41 @@ def forget_password(request):
         return render(request,'forget_password.html')
 
 def confirm_password(request):
-    if request.POST:
-        email = request.POST['email']
-        otp = request.POST['otp']
-        new_password = request.POST['new_password']
-        c_password = request.POST['c_password']
-        
-        uid = User.objects.get(email = email)
-        if str(uid.otp) == otp:
+    if request.method == "POST":
+        email = request.POST.get('email')
+        otp = request.POST.get('otp')
+        new_password = request.POST.get('new_password')
+        c_password = request.POST.get('c_password')
 
-            if new_password == c_password:
-                uid.password = new_password
-                uid.save()
+        try:
+            uid = Register.objects.get(email=email)
 
-                con = {
+            if str(uid.otp) == otp:
+                if new_password == c_password:
+                    uid.password = new_password
+                    uid.save()
+
+                    return render(request, 'login.html', {
+                        'uid': uid,
+                        'success': 'Password updated successfully.'
+                    })
+
+                return render(request, 'confirm_password.html', {
                     'email': email,
-                    'uid' : uid
-                    }
-                return render(request,'login.html',con)
-            else:
-                con = {
-                    'email' : email,
-                    'oid' : "Invalid Confirm password.."
-                    }
-                return render(request,'confirm_password.html',con)
-        else:
-            con = {
-                'email' : email,
-                'oid' : "Invalid OTP.."
-            }
-            return render(request,'confirm_password.html',con)
-    else:
-        con = {
-            'email' : email,
-            'oid' : "Invalid OTP.."
-            }
-        return render(request,'confirm_password.html',con)
+                    'oid': 'Passwords do not match.'
+                })
+
+            return render(request, 'confirm_password.html', {
+                'email': email,
+                'oid': 'Invalid OTP.'
+            })
+
+        except Register.DoesNotExist:
+            return render(request, 'confirm_password.html', {
+                'oid': 'Email not found.'
+            })
+
+    return render(request, 'confirm_password.html')
 
 
 def registration(request):
