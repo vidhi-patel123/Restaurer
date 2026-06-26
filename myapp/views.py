@@ -172,18 +172,26 @@ def confirm_password(request):
 
     return render(request, 'confirm_password.html')
 
-
 def registration(request):
-    if request.POST:
+    if request.method == "POST":
         name = request.POST['name']
         email = request.POST['email']
         password = request.POST['password']
-        rid = Register.objects.create(name=name,
-                                      email=email,
-                                      password=password)
-        return render(request,"login.html")
-    else:
-        return render(request,"registration.html")
+
+        if Register.objects.filter(email=email).exists():
+            return render(request, "registration.html", {
+                'eid': "Email already exists."
+            })
+
+        Register.objects.create(
+            name=name,
+            email=email,
+            password=password
+        )
+
+        return redirect('login')
+
+    return render(request, "registration.html")
 
 def order(request):
     pid = Add_product.objects.all()
