@@ -18,9 +18,7 @@ pipeline{
         stage("Run docker container"){
             steps{
                 sh '''
-                docker stop python-container || true
-                docker rm python-container || true
-
+                docker rm -f python-container || true
                 docker run -d \
                 --name python-container \
                 -p 5000:5000 \
